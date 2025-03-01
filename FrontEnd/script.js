@@ -1,0 +1,54 @@
+window.onload = function () {
+  var workspace = Blockly.inject('blocklyDiv', {
+    toolbox: document.getElementById('toolbox'),
+    scrollbars: true,
+    trashcan: true,
+    theme: window.darkTheme
+  });
+
+  function updateCode() {
+    var code = Blockly.Python.workspaceToCode(workspace);
+    document.getElementById('codeArea').textContent = code;
+    Prism.highlightElement(document.getElementById('codeArea'));  
+  }
+
+  workspace.addChangeListener(updateCode);
+
+  function runCode() {
+    var code = Blockly.Python.workspaceToCode(workspace);
+    fetch('http://127.0.0.1:5000/run', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: code })  
+    })
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('consoleOutput').textContent = data.output;
+    })
+    .catch(error => console.error('Error: ', error));  
+  }
+
+  function checkCode() {
+  }
+
+  function askAI() {
+    prompt = "Give a short hint for checking if a number 'x' is between two other numbers 'a' and 'b'. Use just words, i dont need any fancy stuff, just words, dont exceed 150 words"
+
+    fetch('http://127.0.0.1:5000/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: prompt })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data)
+    })
+    .catch(error => console.error('Error: ', error));
+  }  
+
+  document.getElementById('runBtn').addEventListener('click', runCode);
+  document.getElementById('askAI').addEventListener('click', askAI);
+  document.getElementById('check').addEventListener('click', checkCode);
+
+  updateCode();
+};

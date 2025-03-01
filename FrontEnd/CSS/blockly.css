@@ -1,0 +1,28 @@
+/* CSS pentru blocuri (blockly.css) */
+.blocklyTreeRow {
+    height: 48px !important;
+    font-size: 20px !important;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+  }
+  
+  .blocklyMainWorkspace .blocklyBlockCanvas {
+    transform: scale(1.1);
+    transform-origin: top left;
+  }
+  
+  .blocklyFlyout .blocklyBlockCanvas {
+    transform: scale(1);
+  }
+  
+  .blocklyScrollbarHandle {
+    fill: #555 !important;
+  }
+   
+  /* .blocklyText {
+  } */
+
+  /* .blocklyFlyoutLabelText {
+  } */
+  

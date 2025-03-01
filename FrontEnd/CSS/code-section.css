@@ -1,0 +1,56 @@
+.code-header {
+    padding: 10px;
+    border-bottom: 1px solid #333;
+    background-color: #2a2a2a;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+}
+
+#runBtn, #askAI, #check {
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#runBtn:hover, #askAI:hover, check:hover {
+    background-color: #45a049;
+}
+
+.code-section {
+    flex: 1;
+    padding: 10px;
+    background-color: #1e1e1e;
+    overflow: auto;
+    font-family: monospace;
+    color: #e0e0e0;
+    font-size: 18px; 
+}
+
+.code-section pre code {
+    display: block;
+    padding: 10px;
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    font-size: 18px;
+}
+
+#codeArea {
+    font-size: 18px;
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    padding: 15px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    overflow-y: auto;
+    height: 300px;
+}
+
+pre {
+    margin: 0;
+    padding: 0;
+}

@@ -1,0 +1,18 @@
+.console-section {
+  font-size: 18px;
+  font-family: Consolas, monospace;
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-top: 1px solid #1e1e1e;
+  overflow-y: auto;
+  height: 30%;
+  color: #e0e0e0;
+  padding: 10px;
+}
+
+#consoleOutput {
+  font-family: Consolas, monospace;
+  font-size: 18px;
+  color: #e0e0e0;
+  background-color: #1e1e1e;
+}
