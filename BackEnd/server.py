@@ -1,54 +1,84 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import subprocess
-import tempfile
-import os
-import openai
+from database_crud import *  
+from run_code import run_code  
+from ai_response import ask_ai  
 
 app = Flask(__name__)
 CORS(app)
 
-openai.api_key = ""
-
-def ask_ai(prompt):
-    try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": prompt}],  
-            max_tokens=150 
-        )
-        
-        # Extrage și returnează textul generat
-        return response['choices'][0]['message']['content'].strip()
-
-    except openai.OpenAIError as e:
-        return f"OpenAI API Error: {str(e)}"
-
+# Run Python Code
 @app.route('/run', methods=['POST'])
-def run_code():
+def run_code_request():
     data = request.get_json()
     code = data.get('code', '')
-    
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".py", mode='w') as tmp:
-        tmp.write(code)
-        tmp_path = tmp.name
 
     try:
-        result = subprocess.run(['python', tmp_path], capture_output=True, text=True, timeout=5)
-        output = result.stdout + result.stderr
+        result = run_code(code) 
+        return jsonify(result)
     except Exception as e:
-        output = str(e)
-    finally:
-        os.remove(tmp_path)
-    
-    return jsonify({'output': output})
+        return jsonify({'error': str(e)}), 400
 
+# Get HINT from AI
 @app.route('/ask', methods=['POST'])
 def ask():
     data = request.get_json()
     prompt = data.get('prompt', '')
-    response = ask_ai(prompt)
-    return jsonify({'response': response})
+    
+    try:
+        result = ask_ai(prompt)  
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
+# Create
+@app.route('/tables', methods=['POST'])
+def create_new_table():
+    data = request.get_json()
+    table_name = data.get('table_name')
+    columns = data.get('columns')
+
+    if not table_name or not columns:
+        return jsonify({'error': 'Table name and columns are required'}), 400
+
+    try:
+        result = create_table(table_name, columns)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
+# Read
+@app.route('/tables', methods=['GET'])
+def get_all_tables():
+    try:
+        tables = list_tables()
+        return jsonify(tables)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
+# Edit
+@app.route('/tables/<table_name>', methods=['PUT'])
+def modify_existing_table(table_name):
+    data = request.get_json()
+    add_columns = data.get("add_columns")
+    drop_columns = data.get("drop_columns")
+
+    try:
+        result = modify_table(table_name, add_columns=add_columns, drop_columns=drop_columns)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
+# Delete
+@app.route('/tables/<table_name>', methods=['DELETE'])
+def delete_table_by_name(table_name):
+    try:
+        result = delete_table(table_name)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
