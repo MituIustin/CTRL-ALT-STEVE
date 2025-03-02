@@ -1,5 +1,5 @@
-from BackEnd.crud_table import *
-from BackEnd.crud_row import *
+from crud_table import *
+from crud_row import *
 
 def create_row_example():
     result = insert_row("students", {"name": "John", "age": 22})
@@ -39,9 +39,3 @@ def read_table_example():
 
 if __name__ == "__main__":
     read_table_example()
-    delete_table_example()
-    read_table_example()
-    create_table_example()
-    create_row_example()
-    read_table_example()
-    read_row_example()
