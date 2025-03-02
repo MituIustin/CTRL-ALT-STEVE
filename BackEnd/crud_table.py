@@ -1,6 +1,14 @@
+import os
 import sqlite3
+from dotenv import load_dotenv
 
-DB_NAME = "database.db"
+DB_NAME = ""
+
+def load_env():
+    global DB_NAME
+    dotenv_path = os.path.join(os.getcwd(), '..', 'credentials.env')
+    load_dotenv(dotenv_path)
+    DB_NAME = os.getenv("DB_NAME")
 
 # Create
 def create_table(table_name, columns):
@@ -16,20 +24,12 @@ def create_table(table_name, columns):
     return {"message": f"Table '{table_name}' created successfully!"}
 
 """
-curl -X POST http://127.0.0.1:5000/tables \
-     -H "Content-Type: application/json" \
-     -d '{
-          "table_name": "students",
-          "columns": [
-              {"name": "id", "type": "INTEGER PRIMARY KEY AUTOINCREMENT"},
-              {"name": "name", "type": "TEXT"},
-              {"name": "age", "type": "INTEGER"}
-          ]
-        }'
+curl -X POST http://127.0.0.1:5000/tables -H "Content-Type: application/json" -d "{\"table_name\": \"students\", \"columns\": [{\"name\": \"id\", \"type\": \"INTEGER PRIMARY KEY AUTOINCREMENT\"}, {\"name\": \"name\", \"type\": \"TEXT\"}, {\"name\": \"age\", \"type\": \"INTEGER\"}]}"
 """
 
 # Read
 def list_tables():
+    load_env()
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
     cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
@@ -72,15 +72,9 @@ def modify_table(table_name, add_columns=None, drop_columns=None):
     return {"message": f"Table '{table_name}' modified successfully!"}
 
 """
-curl -X PUT http://127.0.0.1:5000/tables/students \
-     -H "Content-Type: application/json" \
-     -d '{
-          "add_columns": [
-              {"name": "grade", "type": "TEXT"}
-          ],
-          "drop_columns": ["age"]
-        }'
+curl -X PUT http://127.0.0.1:5000/tables/students -H "Content-Type: application/json" -d "{\"add_columns\": [{\"name\": \"grade\", \"type\": \"TEXT\"}], \"drop_columns\": [\"age\"]}"
 """
+
 # Delete
 def delete_table(table_name):
     conn = sqlite3.connect(DB_NAME)

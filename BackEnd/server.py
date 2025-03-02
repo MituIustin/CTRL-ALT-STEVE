@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from database_crud import *  
+from crud_table import *  
+from crud_row import *  
 from run_code import run_code  
 from ai_response import ask_ai  
 
@@ -31,7 +32,7 @@ def ask():
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
-# Create
+# Create Table
 @app.route('/tables', methods=['POST'])
 def create_new_table():
     data = request.get_json()
@@ -47,7 +48,7 @@ def create_new_table():
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
-# Read
+# Read Table
 @app.route('/tables', methods=['GET'])
 def get_all_tables():
     try:
@@ -56,7 +57,7 @@ def get_all_tables():
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
-# Edit
+# Edit Table
 @app.route('/tables/<table_name>', methods=['PUT'])
 def modify_existing_table(table_name):
     data = request.get_json()
@@ -69,7 +70,7 @@ def modify_existing_table(table_name):
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
-# Delete
+# Delete Table
 @app.route('/tables/<table_name>', methods=['DELETE'])
 def delete_table_by_name(table_name):
     try:
@@ -78,7 +79,53 @@ def delete_table_by_name(table_name):
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
+# Create Row
+@app.route('/tables/<table_name>/rows', methods=['POST'])
+def create_row(table_name):
+    data = request.get_json()
+    row_data = data.get('row')  
 
+    if not row_data:
+        return jsonify({'error': 'Row data is required'}), 400
+
+    try:
+        result = insert_row(table_name, row_data)  
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
+# Read Row
+@app.route('/tables/<table_name>/rows', methods=['GET'])
+def get_rows(table_name):
+    try:
+        rows = select_rows(table_name) 
+        return jsonify(rows)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
+# Edit Row
+@app.route('/tables/<table_name>/rows/<row_id>', methods=['PUT'])
+def modify_row(table_name, row_id):
+    data = request.get_json()
+    updated_data = data.get('updated_row')  
+
+    if not updated_data:
+        return jsonify({'error': 'Updated row data is required'}), 400
+
+    try:
+        result = update_row(table_name, row_id, updated_data)  
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
+# Delete Row
+@app.route('/tables/<table_name>/rows/<row_id>', methods=['DELETE'])
+def delete_row(table_name, row_id):
+    try:
+        result = delete_row(table_name, row_id)  
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
 
 if __name__ == '__main__':
     app.run(debug=True)

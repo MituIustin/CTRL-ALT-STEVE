@@ -6,26 +6,58 @@ window.onload = function () {
     theme: window.darkTheme
   });
 
+  Blockly.defineBlocksWithJsonArray([
+    {
+      "type": "input_prompt",
+      "message0": "input()",
+      "output": "String",
+      "colour": 160,
+      "tooltip": "Enter your input",
+      "helpUrl": ""
+    }
+  ]);
+
+  Blockly.Python['input_prompt'] = function(block) {
+    return ['input()', Blockly.Python.ORDER_ATOMIC];
+  };
+
   function updateCode() {
     var code = Blockly.Python.workspaceToCode(workspace);
     document.getElementById('codeArea').textContent = code;
-    Prism.highlightElement(document.getElementById('codeArea'));  
+    Prism.highlightElement(document.getElementById('codeArea'));
   }
 
   workspace.addChangeListener(updateCode);
 
   function runCode() {
     var code = Blockly.Python.workspaceToCode(workspace);
+    var userInput = document.getElementById('userInput').value;
+    var inputs = userInput.split('\n');
+    var inputCount = (code.match(/input\(\)/g) || []).length;
+
+    if (inputCount != 0) {
+      if (inputs.length != inputCount || inputs[0] == "") {
+        document.getElementById('consoleOutput').textContent = 'Error: Not enough input values or too many. Expected ' + inputCount + ' values.';
+        return; 
+      }
+    }
+
+    code = code.replace(/input\(\)/g, function() {
+      return `"${inputs.shift() || ''}"`;  
+    });
+
     fetch('http://127.0.0.1:5000/run', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code: code })  
+      body: JSON.stringify({ code: code })
     })
     .then(response => response.json())
     .then(data => {
       document.getElementById('consoleOutput').textContent = data.output;
     })
-    .catch(error => console.error('Error: ', error));  
+    .catch(error => {
+      document.getElementById('consoleOutput').textContent = 'Error: ' + error.message;
+    });
   }
 
   function checkCode() {
