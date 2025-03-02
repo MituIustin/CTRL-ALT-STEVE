@@ -15,22 +15,30 @@
 <body>
   <div class="container">
     <div class="left-pane">
-      <div id="blocklyDiv"></div>
+        <div id="blocklyDiv"></div>
     </div>
     <div class="right-pane">
-      <div class="code-header">
-        <span>Python Code</span>
-        <button id="runBtn">Run Code</button>
-        <button id="askAI">AI Hint</button>
-        <button id="check">Check</button>
-      </div>
-      <pre id="codeArea" class="code-section"><code id="pythonCode" class="language-python"></code></pre>
-      <div class="code-header">
-        <span>Output</span>
-      </div>
-      <div class="console-section">
-        <pre id="consoleOutput"></pre>
-      </div>
+        <div class="code-header">
+            <span>Python Code</span>
+            <button id="runBtn">Run Code</button>
+            <button id="askAI">AI Hint</button>
+            <button id="check">Check</button>
+        </div>
+        <pre id="codeArea" class="code-section"><code id="pythonCode" class="language-python"></code></pre>
+        
+        <div class="code-header">
+          <span>Input</span>
+        </div>
+        <div id="inputSection">
+            <textarea id="userInput" name="userInput" rows="5" placeholder="Enter input, each number / text on a different line ..."></textarea>
+        </div>
+        
+        <div class="code-header">
+            <span>Output</span>
+        </div>
+        <div class="console-section">
+            <pre id="consoleOutput"></pre>
+        </div>
     </div>
   </div>
 
@@ -89,7 +97,10 @@
       <block type="lists_split"></block>
     </category>
     <category name="Functions" custom="PROCEDURE"></category>
-  </xml>
+    <category name="Input">
+      <block type="input_prompt"></block>
+    </category>
+</xml>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/blockly/9.2.1/blockly_compressed.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/blockly/9.2.1/blocks_compressed.js"></script>
