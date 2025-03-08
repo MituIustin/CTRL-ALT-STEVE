@@ -10,6 +10,6 @@ Blockly.defineBlocksWithJsonArray([
   ]);
   
   Blockly.Python['input_prompt'] = function(block) {
-    return ['input()', Blockly.Python.ORDER_ATOMIC];
+    return ['int(input())', Blockly.Python.ORDER_ATOMIC];
   };
   

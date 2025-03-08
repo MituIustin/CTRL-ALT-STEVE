@@ -6,5 +6,5 @@ def solve():
 
     a, b = map(int, input_data.split())
 
-    result = a + b
+    result = a * b
     return str(result)
