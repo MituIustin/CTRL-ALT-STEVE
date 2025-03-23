@@ -7,6 +7,46 @@ from ai_response import ask_ai
 
 app = Flask(__name__)
 CORS(app)
+CORS(app, supports_credentials=True) 
+
+# Get Tests
+@app.route('/get_test_cases', methods=['GET'])
+def get_test_cases():
+    test_cases = select_rows('test_cases') 
+    filtered_test_cases = [test for test in test_cases['rows'] if test[1] == 1]  
+
+    return jsonify({'rows': filtered_test_cases})
+
+
+# Submit Score
+@app.route('/submit_score', methods=['POST'])
+def submit_score():
+    print("okl")
+    data = request.get_json()
+    user_id = data.get('user_id')  
+    problem_id = data.get('problem_id') 
+    code = data.get('code') 
+    score = data.get('score', 0) 
+    print(score)
+    print(code)
+    status = 'passed' if score == 100 else 'failed' if score == 0 else 'pending'
+
+    if not user_id or not problem_id or not code:
+        return jsonify({'error': 'user_id, problem_id și code sunt necesare'}), 400
+
+    try:
+        insert_row('submissions', {
+            'user_id': user_id,
+            'problem_id': problem_id,
+            'code': code,
+            'score': score,
+            'status': status
+        })  
+
+        return jsonify({'message': 'Submission saved successfully'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
 
 # Run Python Code
 @app.route('/run', methods=['POST'])
