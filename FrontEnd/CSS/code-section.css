@@ -8,7 +8,7 @@
     font-size: 18px;
 }
 
-#runBtn, #askAI, #check {
+#runBtn {
     padding: 8px 16px;
     background-color: #4CAF50;
     color: white;
@@ -17,7 +17,20 @@
     font-size: 16px;
 }
 
-#runBtn:hover, #askAI:hover, check:hover {
+#runBtn:hover {
+    background-color: #45a049;
+}
+
+#genBtn {
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#genBtn:hover {
     background-color: #45a049;
 }
 
@@ -28,7 +41,7 @@
     overflow: auto;
     font-family: monospace;
     color: #e0e0e0;
-    font-size: 18px; 
+    font-size: 18px;
 }
 
 .code-section pre code {
